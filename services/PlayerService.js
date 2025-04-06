@@ -3,6 +3,20 @@ const PlayerModel = require('../models/player');
 const PlayerModelInstance = new PlayerModel();
 
 module.exports = class PlayerService {
+    async getPlayer(username) {
+        try {
+            const player = await PlayerModelInstance.findOneByUsername(username);
+
+            if (!player) {
+                throw createError(404);
+            }
+
+            return player;
+        } catch(err) {
+            throw createError(500, err);
+        }
+    }
+
     async getUsernames(ids) {
         try {
             const usernames = await PlayerModelInstance.getUsernamesFromIds(ids);

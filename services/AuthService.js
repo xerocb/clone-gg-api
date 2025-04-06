@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const PlayerModel = require('../models/player');
 const PlayerModelInstance = new PlayerModel();
 
-const SALT_ROUNDS = require('../config').SALT_ROUNDS;
+const SALT_ROUNDS = Number(require('../config').SALT_ROUNDS);
 
 const passwordHash = async(password, saltRounds) => {
     try {
