@@ -103,4 +103,104 @@ module.exports = class PlayerModel {
             throw new Error(err);
         }
     }
+
+    async getFavouriteChampData(id) {
+        try {
+            const statement = 
+                `SELECT
+                    c.name as name,
+                    ROUND(AVG(gp.creep_score)) AS cs,
+                    ROUND(AVG(gp.kills), 1) AS kills,
+                    ROUND(AVG(gp.deaths), 1) AS deaths,
+                    ROUND(AVG(gp.assists), 1) AS assists,
+                    SUM(CASE WHEN g.winning_team = gp.team THEN 1 ELSE 0 END) as wins,
+                    COUNT(*) as games
+                FROM champions c
+                INNER JOIN game_players gp
+                ON c.id = gp.champion_id
+                INNER JOIN games g
+                ON gp.game_id = g.id
+                WHERE gp.player_id = $1
+                GROUP BY gp.champion_id, c.name
+                ORDER BY games DESC
+                LIMIT 7`;
+            const values = [id];
+
+            const result = await db.query(statement, values);
+
+            if (result.rows?.length > 0) {
+                return result.rows;
+            }
+
+            return null;
+        } catch(err) {
+            throw new Error(err);
+        }
+    }
+
+    async getStatsData(id) {
+        try {
+            const statement = 
+                `WITH stats AS (
+                    SELECT
+                        SUM(CASE WHEN g.winning_team = gp.team THEN 1 ELSE 0 END) as wins,
+                        SUM(CASE WHEN g.winning_team = gp.team THEN 0 ELSE 1 END) as losses
+                    FROM games g
+                    INNER JOIN game_players gp
+                    ON g.id = gp.game_id
+                    WHERE gp.player_id = $1
+                )
+                SELECT
+                    wins,
+                    losses,
+                    ROUND(wins*100.0/NULLIF(wins+losses, 0)) as winrate
+                FROM stats`;
+            const values = [id];
+
+            const result = await db.query(statement, values);
+
+            if (result.rows?.length > 0) {
+                return result.rows;
+            }
+
+            return null;
+        } catch(err) {
+            throw new Error(err);
+        }
+    }
+
+    async getRecentlyPlayedData(id) {
+        try {
+            const statement = 
+                `SELECT
+                    p.username,
+                    SUM(CASE WHEN g.winning_team = gp2.team THEN 1 ELSE 0 END) as wins,
+                    SUM(CASE WHEN g.winning_team = gp2.team THEN 0 ELSE 1 END) as losses
+                FROM game_players gp1
+                INNER JOIN game_players gp2
+                    ON gp1.game_id = gp2.game_id
+                    AND gp1.team = gp2.team
+                    AND gp1.player_id <> gp2.player_id
+                INNER JOIN games g
+                    ON g.id = gp2.game_id
+                INNER JOIN players p
+                    ON gp2.player_id = p.id
+                WHERE gp1.player_id = $1
+                GROUP BY gp2.player_id, p.username
+                HAVING COUNT(*) >= 2
+                ORDER BY COUNT(*) DESC
+                LIMIT 7`;
+            const values = [id];
+
+            const result = await db.query(statement, values);
+
+            if (result.rows?.length > 0) {
+                return result.rows;
+            }
+
+            return null;
+        } catch(err) {
+            throw new Error(err);
+        }
+    }
 };
