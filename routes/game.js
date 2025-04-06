@@ -8,24 +8,20 @@ const GameServiceInstance = new GameService();
 module.exports = (app) => {
     app.use('/game', router);
 
-    router.get('/', async (req, res, next) => {
+    router.get('/:username', async (req, res, next) => {
         try {
-            if (!req.body?.username) {
-                throw createError(400, 'No username provided.');
-            }
-            const response = await GameServiceInstance.getGames(req.body.username);
+            const { username } = req.params;
+            const response = await GameServiceInstance.getGames(username);
             res.status(200).send(response);
         } catch(err) {
             next(err);
         }
     });
 
-    router.get('/detail', async (req, res, next) => {
+    router.get('/:username/detail', async (req, res, next) => {
         try {
-            if (!req.body?.username) {
-                throw createError(400, 'No username provided.');
-            }
-            const response = await GameServiceInstance.getGameDetails(req.body.username);
+            const { username } = req.params;
+            const response = await GameServiceInstance.getGameDetails(username);
             res.status(200).send(response);
         } catch(err) {
             next(err);
