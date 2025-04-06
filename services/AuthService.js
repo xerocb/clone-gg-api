@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const PlayerModel = require('../models/player');
 const PlayerModelInstance = new PlayerModel();
 
+const SALT_ROUNDS = require('../config').SALT_ROUNDS;
+
 const passwordHash = async(password, saltRounds) => {
     try {
         const salt = await bcrypt.genSalt(saltRounds);
@@ -57,9 +59,23 @@ module.exports = class AuthService {
                 throw createError(409, 'Username already in use.');
             }
 
-            const hashedPassword = await passwordHash(password, 5);
+            const hashedPassword = await passwordHash(password, SALT_ROUNDS);
 
             await PlayerModelInstance.create({ username, password: hashedPassword });
+        } catch(err) {
+            throw createError(500, err);
+        }
+    }
+
+    async updatePassword({ userId, newPassword }) {
+        try {
+            if (!userId || !newPassword) {
+                throw createError(400, 'User ID and new password must be provided.');
+            }
+
+            const hashedPassword = await passwordHash(newPassword, SALT_ROUNDS);
+
+            await PlayerModelInstance.update({ id: userId, data: { password: hashedPassword } });
         } catch(err) {
             throw createError(500, err);
         }

@@ -40,4 +40,19 @@ module.exports = (app, passport) => {
             next(err);
         }
     });
+
+    router.post('/update', async (req, res, next) => {
+        try {
+            if (!req.user) {
+                throw createError(401, 'No user logged in.');
+            }
+            const response = await AuthServiceInstance.updatePassword({
+                userId: req.user.id, 
+                newPassword: req.body.password
+            });
+            res.status(200).send(response);
+        } catch(err) {
+            next(err);
+        }
+    });
 };

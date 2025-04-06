@@ -16,6 +16,29 @@ module.exports = class PlayerModel {
         }
     }
 
+    async update({ id, data }) {
+        try {
+            const columns = Object.keys(data);
+            const dataValues = Object.values(data);
+            let updateFields = '';
+            for (let i = 0; i < columns.length; i++) {
+                const quote = typeof dataValues[i] === "string" ? "'" : "";
+                updateFields += `${columns[i]} = ${quote}${dataValues[i]}${quote}, `
+            }
+            updateFields = updateFields.slice(0, updateFields.length - 2);
+
+            const statement = 
+                `UPDATE players
+                SET ${updateFields}
+                WHERE id=$1`;
+            const queryValues = [id];
+
+            await db.query(statement, queryValues);
+        } catch(err) {
+            throw new Error(err);
+        }
+    }
+
     async findOneById(id) {
         try {
             const statement = 
