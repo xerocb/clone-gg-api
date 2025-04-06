@@ -8,6 +8,6 @@ module.exports = async (app) => {
     await routeLoader(app, passport);
 
     app.use((err, req, res, next) => {
-        res.status(err.status).send(err.message);
+        res.status(err.status ?? 500).send(err.message);
     });
 };
