@@ -80,4 +80,4 @@ module.exports = class AuthService {
             throw createError(500, err);
         }
     }
-}
+};

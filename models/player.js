@@ -78,4 +78,29 @@ module.exports = class PlayerModel {
             throw new Error(err);
         }
     }
-}
+
+    async getUsernamesFromIds(ids) {
+        try {
+            let searchValues = '(';
+            for (let i = 0; i < ids.length; i++) {
+                searchValues += `$${i+1}, `;
+            }
+            searchValues = searchValues.slice(0, searchValues.length - 2) + ')';
+
+            const statement = 
+                `SELECT username
+                FROM players
+                WHERE id IN ${searchValues}`;
+            
+            const result = await db.query(statement, ids);
+
+            if (result.rows?.length > 0) {
+                return result.rows.map(row => row.username);
+            }
+
+            return null;
+        } catch(err) {
+            throw new Error(err);
+        }
+    }
+};
