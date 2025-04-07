@@ -23,7 +23,8 @@ module.exports = (app) => {
             saveUninitialized: false,
             cookie: {
                 secure: true,
-                maxAge: 24 * 60 * 60 * 1000
+                maxAge: 24 * 60 * 60 * 1000,
+                sameSite: 'none'
             }
         })
     );
