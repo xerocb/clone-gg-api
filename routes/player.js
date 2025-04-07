@@ -31,7 +31,11 @@ module.exports = (app) => {
         try {
             const { id } = req.params;
             const response = await PlayerServiceInstance.getFavouriteChamps(id);
-            res.status(200).send(response);
+            if (!response) {
+                res.status(204).send();
+            } else {
+                res.status(200).send(response);
+            }
         } catch(err) {
             next(err);
         }
@@ -41,7 +45,11 @@ module.exports = (app) => {
         try {
             const { id } = req.params;
             const response = await PlayerServiceInstance.getStats(id);
-            res.status(200).send(response);
+            if (response.wins === null) {
+                res.status(204).send();
+            } else {
+                res.status(200).send(response);
+            }
         } catch(err) {
             next(err);
         }
@@ -51,7 +59,11 @@ module.exports = (app) => {
         try {
             const { id } = req.params;
             const response = await PlayerServiceInstance.getRecentlyPlayed(id);
-            res.status(200).send(response);
+            if (!response) {
+                res.status(204).send();
+            } else {
+                res.status(200).send(response);
+            }
         } catch(err) {
             next(err);
         }

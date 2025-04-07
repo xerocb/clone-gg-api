@@ -12,7 +12,11 @@ module.exports = (app) => {
         try {
             const { username } = req.params;
             const response = await GameServiceInstance.getGames(username);
-            res.status(200).send(response);
+            if (!response) {
+                res.status(204).send();
+            } else {
+                res.status(200).send(response);
+            }
         } catch(err) {
             next(err);
         }
@@ -22,7 +26,11 @@ module.exports = (app) => {
         try {
             const { username } = req.params;
             const response = await GameServiceInstance.getGameDetails(username);
-            res.status(200).send(response);
+            if (!response) {
+                res.status(204).send();
+            } else {
+                res.status(200).send(response);
+            }
         } catch(err) {
             next(err);
         }
