@@ -7,7 +7,7 @@ const FRONT_END_ORIGIN = require('../config').FRONT_END_ORIGIN;
 const SESSION_SECRET = require('../config').SESSION_SECRET;
 
 module.exports = (app) => {
-    console.log(FRONT_END_ORIGIN);
+    app.set('trust proxy', 1);
     app.use(cors({
         origin: FRONT_END_ORIGIN,
         credentials: true
