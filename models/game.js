@@ -11,7 +11,7 @@ module.exports = class GameModel {
                 INNER JOIN players p
                 ON gp.player_id = p.id
                 WHERE p.username = $1
-                ORDER BY g.game_end
+                ORDER BY g.game_end DESC
                 LIMIT 20`;
             const values = [username];
 
