@@ -96,10 +96,8 @@ module.exports = class PlayerModel {
                 INNER JOIN ordering o
                 ON p.id = o.id
                 ORDER BY o.ordering`;
-
-            console.log(statement);
             
-            const result = await db.query(statement, ids);
+            const result = await db.query(statement);
 
             if (result.rows?.length > 0) {
                 return result.rows.map(row => row.username);
