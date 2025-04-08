@@ -43,7 +43,7 @@ module.exports = class GameModel {
                         WHERE username = $1
                     )
                 )
-                ORDER BY g.game_end, gp.id
+                ORDER BY g.game_end DESC, gp.id
                 LIMIT 200`;
             const values = [username];
 
