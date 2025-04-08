@@ -81,16 +81,21 @@ module.exports = class PlayerModel {
 
     async getUsernamesFromIds(ids) {
         try {
-            let searchValues = '(';
+            let searchValues = '';
             for (let i = 0; i < ids.length; i++) {
-                searchValues += `$${i+1}, `;
+                searchValues += `(${ids[i]}, ${i+1}), `;
             }
-            searchValues = searchValues.slice(0, searchValues.length - 2) + ')';
+            searchValues = searchValues.slice(0, searchValues.length - 2);
 
             const statement = 
-                `SELECT username
-                FROM players
-                WHERE id IN ${searchValues}`;
+                `WITH order(id, order) AS (
+                    VALUES ${searchValues}
+                )
+                SELECT p.username
+                FROM players p
+                INNER JOIN order o
+                ON p.id = o.id
+                ORDER BY o.order`;
             
             const result = await db.query(statement, ids);
 
