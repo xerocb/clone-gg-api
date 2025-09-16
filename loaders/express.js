@@ -1,7 +1,7 @@
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
-const pgSession = require('connect-pg-simple')(session);
+const mySqlSession = require('express-mysql-session')(session);
 const pool = require('../db').pool;
 const FRONT_END_ORIGIN = require('../config').FRONT_END_ORIGIN;
 const SESSION_SECRET = require('../config').SESSION_SECRET;
@@ -16,9 +16,7 @@ module.exports = (app) => {
 
     app.use(
         session({
-            store: new pgSession({
-                pool
-            }),
+            store: new mySqlSession({}, pool),
             secret: SESSION_SECRET,
             resave: false,
             saveUninitialized: false,
