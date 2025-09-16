@@ -1,7 +1,7 @@
-const Pool = require('pg').Pool;
+const mysql = require('mysql2/promise');
 const DB = require('../config').DB;
 
-const pool = new Pool({
+const pool = mysql.createPool(
     user: DB.USER,
     host: DB.HOST,
     database: DB.DATABASE,

@@ -10,12 +10,12 @@ module.exports = class GameModel {
                 ON g.id = gp.game_id
                 INNER JOIN players p
                 ON gp.player_id = p.id
-                WHERE p.username = $1
+                WHERE p.username = ?
                 ORDER BY g.game_end DESC
                 LIMIT 20`;
             const values = [username];
 
-            const result = await db.query(statement, values);
+            const [result, _] = await db.query(statement, values);
             
             if (result.rows?.length > 0) {
                 return result.rows;
@@ -40,14 +40,14 @@ module.exports = class GameModel {
                     WHERE player_id = (
                         SELECT id
                         FROM players
-                        WHERE username = $1
+                        WHERE username = ?
                     )
                 )
                 ORDER BY g.game_end DESC, gp.id
                 LIMIT 200`;
             const values = [username];
 
-            const result = await db.query(statement, values);
+            const [result, _] = await db.query(statement, values);
             
             if (result.rows?.length > 0) {
                 return result.rows;

@@ -7,7 +7,7 @@ module.exports = class PlayerModel {
                 `INSERT INTO players
                 (username, password)
                 VALUES
-                ($1, $2)`;
+                (?, ?)`;
             const values = [username, password];
 
             await db.query(statement, values);
@@ -30,7 +30,7 @@ module.exports = class PlayerModel {
             const statement = 
                 `UPDATE players
                 SET ${updateFields}
-                WHERE id=$1`;
+                WHERE id=?`;
             const queryValues = [id];
 
             await db.query(statement, queryValues);
@@ -44,10 +44,10 @@ module.exports = class PlayerModel {
             const statement = 
                 `SELECT *
                 FROM players
-                WHERE id=$1`;
+                WHERE id=?`;
             const values = [id];
 
-            const result = await db.query(statement, values);
+            const [result, _] = await db.query(statement, values);
 
             if (result.rows?.length > 0) {
                 return result.rows[0];
@@ -64,10 +64,10 @@ module.exports = class PlayerModel {
             const statement = 
                 `SELECT *
                 FROM players
-                WHERE username=$1`;
+                WHERE username=?`;
             const values = [username];
 
-            const result = await db.query(statement, values);
+            const [result, _] = await db.query(statement, values);
 
             if (result.rows?.length > 0) {
                 return result.rows[0];
@@ -97,7 +97,7 @@ module.exports = class PlayerModel {
                 ON p.id = o.id
                 ORDER BY o.ordering`;
             
-            const result = await db.query(statement);
+            const [result, _] = await db.query(statement);
 
             if (result.rows?.length > 0) {
                 return result.rows.map(row => row.username);
@@ -125,13 +125,13 @@ module.exports = class PlayerModel {
                 ON c.id = gp.champion_id
                 INNER JOIN games g
                 ON gp.game_id = g.id
-                WHERE gp.player_id = $1
+                WHERE gp.player_id = ?
                 GROUP BY gp.champion_id, c.name
                 ORDER BY games DESC
                 LIMIT 7`;
             const values = [id];
 
-            const result = await db.query(statement, values);
+            const [result, _] = await db.query(statement, values);
 
             if (result.rows?.length > 0) {
                 return result.rows;
@@ -153,7 +153,7 @@ module.exports = class PlayerModel {
                     FROM games g
                     INNER JOIN game_players gp
                     ON g.id = gp.game_id
-                    WHERE gp.player_id = $1
+                    WHERE gp.player_id = ?
                 )
                 SELECT
                     wins,
@@ -162,7 +162,7 @@ module.exports = class PlayerModel {
                 FROM stats`;
             const values = [id];
 
-            const result = await db.query(statement, values);
+            const [result, _] = await db.query(statement, values);
 
             if (result.rows?.length > 0) {
                 return result.rows[0];
@@ -190,14 +190,14 @@ module.exports = class PlayerModel {
                     ON g.id = gp2.game_id
                 INNER JOIN players p
                     ON gp2.player_id = p.id
-                WHERE gp1.player_id = $1
+                WHERE gp1.player_id = ?
                 GROUP BY gp2.player_id, p.username
                 HAVING COUNT(*) >= 2
                 ORDER BY COUNT(*) DESC
                 LIMIT 7`;
             const values = [id];
 
-            const result = await db.query(statement, values);
+            const [result, _] = await db.query(statement, values);
 
             if (result.rows?.length > 0) {
                 return result.rows;
