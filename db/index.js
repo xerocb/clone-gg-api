@@ -1,7 +1,7 @@
 const mysql = require('mysql2/promise');
 const DB = require('../config').DB;
 
-const pool = mysql.createPool(
+const pool = mysql.createPool({
     user: DB.USER,
     host: DB.HOST,
     database: DB.DATABASE,
