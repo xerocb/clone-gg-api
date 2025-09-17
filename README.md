@@ -1,3 +1,3 @@
 # Clone.GG API
 
-Back-end for https://github.com/xerocb/clone-gg
+API for https://github.com/xerocb/clone-gg
