@@ -49,8 +49,8 @@ module.exports = class PlayerModel {
 
             const [result, _] = await db.query(statement, values);
 
-            if (result.rows?.length > 0) {
-                return result.rows[0];
+            if (result.length > 0) {
+                return result[0];
             }
 
             return null;
@@ -69,8 +69,8 @@ module.exports = class PlayerModel {
 
             const [result, _] = await db.query(statement, values);
 
-            if (result.rows?.length > 0) {
-                return result.rows[0];
+            if (result.length > 0) {
+                return result[0];
             }
 
             return null;
@@ -99,8 +99,8 @@ module.exports = class PlayerModel {
             
             const [result, _] = await db.query(statement);
 
-            if (result.rows?.length > 0) {
-                return result.rows.map(row => row.username);
+            if (result.length > 0) {
+                return result.map(row => row.username);
             }
 
             return null;
@@ -133,8 +133,8 @@ module.exports = class PlayerModel {
 
             const [result, _] = await db.query(statement, values);
 
-            if (result.rows?.length > 0) {
-                return result.rows;
+            if (result.length > 0) {
+                return result;
             }
 
             return null;
@@ -164,8 +164,8 @@ module.exports = class PlayerModel {
 
             const [result, _] = await db.query(statement, values);
 
-            if (result.rows?.length > 0) {
-                return result.rows[0];
+            if (result.length > 0) {
+                return result[0];
             }
 
             return null;
@@ -199,8 +199,8 @@ module.exports = class PlayerModel {
 
             const [result, _] = await db.query(statement, values);
 
-            if (result.rows?.length > 0) {
-                return result.rows;
+            if (result.length > 0) {
+                return result;
             }
 
             return null;

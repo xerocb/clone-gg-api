@@ -13,6 +13,6 @@ const pool = mysql.createPool({
 });
 
 module.exports = {
-    query: (text, params) => pool.execute(text, params),
+    query: (text, params) => pool.query(text, params),
     pool
 };

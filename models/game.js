@@ -17,8 +17,8 @@ module.exports = class GameModel {
 
             const [result, _] = await db.query(statement, values);
             
-            if (result.rows?.length > 0) {
-                return result.rows;
+            if (result.length > 0) {
+                return result;
             }
 
             return null;
@@ -49,8 +49,8 @@ module.exports = class GameModel {
 
             const [result, _] = await db.query(statement, values);
             
-            if (result.rows?.length > 0) {
-                return result.rows;
+            if (result.length > 0) {
+                return result;
             }
 
             return null;
